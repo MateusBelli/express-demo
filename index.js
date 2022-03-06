@@ -1,8 +1,21 @@
-const express = require('express');
-const Joi = require('joi');
+const express       = require('express');
+const logger        = require('./middlewares/logger');
+const authenticator = require('./middlewares/authenticator');
+const Joi           = require('joi');
+const helmet        = require('helmet');
+const morgan       = require('morgan');
+
+// Init express
 const app = express();
 
+// Middlewares
+app.use(helmet());
+app.use(morgan('tiny'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Read encoded (or in Postman x-www-form-urlencoded)
+app.use(express.static('public'));
+app.use(logger);
+app.use(authenticator);
 
 const courses = [
     {
@@ -23,6 +36,7 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
+// Courses
 app.get('/api/courses', (req, res) => {
     res.send(courses);
 });
@@ -35,7 +49,7 @@ app.get('/api/courses/:id', (req, res) => {
 });
 
 app.post('/api/courses', (req, res) => {
-    const { error } = validateCourse(req.body);
+    const { value, error } = validateCourse(req.body);
 
     if (error) {
         var errorMessage = [];

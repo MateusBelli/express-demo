@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.3",
+    "helmet": "^5.0.2",
     "joi": "^17.6.0",
+    "morgan": "^1.10.0",
     "sentry": "^0.1.2"
   }
 }
